@@ -17,12 +17,12 @@ data Interface = Interface
 runGame :: Interface -> IO ()
 runGame i = do
   putStrLn "Welcome to the game."
-
-  gameLoop i (iShuffle i (iFullDeck i)) (iEmpty i)
+  g <- (iShuffle i)
+  gameLoop i g (iEmpty i)
 
 gameLoop :: Interface -> Deck -> Hand -> IO ()
 gameLoop i deck hand = do
-  putStrLn ("Your current score: ")
+
 
   if False then do
     finish i hand deck
@@ -31,7 +31,10 @@ gameLoop i deck hand = do
     yn <- getLine
     if null yn || not (map toLower yn == "n") then do
       let (hand', deck') = iDraw i deck
-      gameLoop i deck' hand'
+      let handP = addHand hand hand'
+      putStrLn ("Your current hand: " ++ show (handP))
+      gameLoop i deck' handP
+
      else
       finish i hand deck
 
