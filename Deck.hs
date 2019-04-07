@@ -65,3 +65,21 @@ cardValues _     = [10]
 
 dealCards :: Deck -> (Hand, Deck)
 dealCards deck = (take 1 deck, drop 1 deck)
+
+valueRank :: Value -> Integer
+valueRank A   = 11
+valueRank Two   = 2
+valueRank Three = 3
+valueRank Four  = 4
+valueRank Five  = 5
+valueRank Six   = 6
+valueRank Seven = 7
+valueRank Eight = 8
+valueRank Nine  = 9
+valueRank _     = 10
+
+addHand :: Hand -> Hand -> Hand
+addHand hand1 hand2 = hand1 ++ hand2
+
+totalValue :: Card -> Integer
+totalValue (Card value _) = valueRank value
