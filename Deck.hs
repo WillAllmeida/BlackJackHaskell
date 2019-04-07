@@ -16,6 +16,7 @@ allSuits :: [Suit]
 allSuits = [ (minBound :: Suit) .. ]
 
 type Hand = [Card]
+
 type Deck = [Card]
 
 data Value = A | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Valete | Dama | Rei
@@ -35,22 +36,19 @@ allValues = [ (minBound :: Value) .. ]
 fullDeck :: Deck
 fullDeck = Card <$> allValues <*> allSuits
 
-shuffle :: [a] -> IO [a]
-shuffle xs = do
-    ar <- newArray len xs
-    forM [1..len] $ \i -> do
-      j <- randomRIO (i,len)
-      vi <- readArray ar i
-      vj <- readArray ar j
-      writeArray ar j vi
-      return vj
-  where
-    len = length xs
-    newArray :: Int -> [a] -> IO (IOArray Int a)
-    newArray len = newListArray (1, len)
 
-shuffleDeck  :: IO Deck
-shuffleDeck = shuffle fullDeck
+shuffleCards :: Deck -> Deck -> IO Deck
+shuffleCards shuffled [] = return shuffled
+shuffleCards shuffled unshuffled = do
+  randomCardIndex <- randomRIO (0, length unshuffled - 1)
+  let randomCard = unshuffled !! randomCardIndex
+      unshuffledBefore = take randomCardIndex unshuffled
+      unshuffledAfter = drop (randomCardIndex + 1) unshuffled
+
+  shuffleCards (randomCard:shuffled) (unshuffledBefore ++ unshuffledAfter)
+
+shuffleDeck :: IO Deck
+shuffleDeck = shuffleCards [] fullDeck
 
 cardValues :: Value -> [Int]
 cardValues A   = [1, 11]
@@ -65,5 +63,5 @@ cardValues Nine  = [9]
 cardValues _     = [10]
 
 
-dealCards :: Int -> Deck -> (Hand, Deck)
-dealCards number deck = (take number deck, drop number deck)
+dealCards :: Deck -> (Hand, Deck)
+dealCards deck = (take 1 deck, drop 1 deck)
