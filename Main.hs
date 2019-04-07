@@ -10,22 +10,22 @@ data Interface = Interface
   , iFullDeck :: Deck
   , iDraw     :: Deck -> (Hand, Deck)
   , iShuffle  :: IO Deck
-  , iGameOver :: Card -> Bool
+--  , iGameOver :: Card -> Bool
   }
 
 
 runGame :: Interface -> IO ()
 runGame i = do
   putStrLn "Welcome to the game."
+  let score = 0
   g <- (iShuffle i)
-  gameLoop i g (iEmpty i)
+  gameLoop i g (iEmpty i) score
 
-gameLoop :: Interface -> Deck -> Hand -> IO ()
-gameLoop i deck hand = do
+gameLoop :: Interface -> Deck -> Hand -> Integer -> IO ()
+gameLoop i deck hand score = do
 
-
-  if False then do
-    finish i hand deck
+  if score >= 21 then do
+    finish i hand deck score
    else do
     putStrLn "Draw another card? [y]"
     yn <- getLine
@@ -38,17 +38,18 @@ gameLoop i deck hand = do
       --let scoreC = scoreC + scoreP
       putStrLn ("Your current hand: " ++ show (handP))
       putStrLn ("Your current score: " ++ show (scoreP))
-      gameLoop i deck' handP
+      gameLoop i deck' handP scoreP
 
      else
-      finish i hand deck
+      finish i hand deck score
 
-finish :: Interface -> Hand -> Deck -> IO ()
-finish i hand deck = do
-  putStrLn ("Game Over")
+finish :: Interface -> Hand -> Deck -> Integer -> IO ()
+finish i hand deck score = do
 
-
-
+  if score > 21 then do
+    putStrLn ("Você perdeu")
+    else do
+      putStrLn ("Você ganhou")
 
 
 
@@ -69,7 +70,7 @@ valueRank Seven = 7
 valueRank Eight = 8
 valueRank Nine  = 9
 valueRank _     = 10
-gameOver card = totalValue card > 21
+
 
 totalValue :: Card -> Integer
 totalValue (Card value _) = valueRank value
@@ -79,7 +80,6 @@ totalValue (Card value _) = valueRank value
 empty :: Hand
 empty = []
 
-gameOver :: Card -> Bool
 
 --valueC :: Hand -> Integer
 --valueC empty                    = 0
@@ -97,7 +97,7 @@ implementation = Interface
   ,  iFullDeck  = fullDeck
   ,  iDraw      = dealCards
   ,  iShuffle   = shuffleDeck
-  ,  iGameOver = gameOver
+--  ,  iGameOver = gameOver
   }
 
 
