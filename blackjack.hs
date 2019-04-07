@@ -3,8 +3,18 @@ import Data.Char
 import System.Random
 import Data.List
 
+sizeDeck :: [Int] -> Int
+sizeDeck = length
+
+shuffleDeck :: StdGen -> [Int] -> [Int]
+shuffleDeck gen m = let (r,g) = randomR (0, sizeDeck m-1) gen
+    in (m !! r: if sizeDeck m > 1 then shuffleDeck g $ delete (m !! r) m else [])
+
+values :: [Int]
 values = [11,11,11,11,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,
         8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+
+names :: [String]
 names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
         "2 de copas", "2 de ouros", "2 de paus", "2 de espadas",
         "3 de copas", "3 de ouros", "3 de paus", "3 de espadas",
@@ -18,7 +28,17 @@ names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
         "J de copas", "J de ouros", "J de paus", "J de espadas",
         "Q de copas", "Q de ouros", "Q de paus", "Q de espadas",
         "K de copas", "K de ouros", "K de paus", "K de espadas"]
-ideck = [1..52]
 player = []
 dealer = []
 
+--playing :: [Int] -> IO ()
+--playing ideck = do
+--        if lost 
+        
+
+--main ::  IO () 
+--main  = do
+--gen <- getStdGen
+--let ideck = [0..51]
+--let ideck = shuffleDeck gen ideck
+--play ideck
