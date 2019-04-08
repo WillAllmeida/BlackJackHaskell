@@ -7,7 +7,7 @@ sizeDeck :: [Int] -> Int
 sizeDeck = length
 
 shuffleDeck :: StdGen -> [Int] -> [Int]
-shuffleDeck gen m = let (r,g) = randomR (0, sizeDeck m-1) gen
+shuffleDeck seed m = let (r,g) = randomR (0, sizeDeck m-1) seed
     in (m !! r: if sizeDeck m > 1 then shuffleDeck g $ delete (m !! r) m else [])
 
 values :: [Int]
@@ -31,14 +31,28 @@ names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
 player = []
 dealer = []
 
---playing :: [Int] -> IO ()
---playing ideck = do
---        if lost 
+playing :: [Int] -> Int -> Int ->IO ()
+playing ideck player dealer = do
+    if player > 21
+    then print "Voce perdeu :("
+    else if dealer > 21
+    then print "Voce ganhou!!"
+    else do
+        --print ideck
+        print "-----------------------------"
+        print "(1)Desce uma carta!--(2)Parar"
+        opt <- getLine
+        print opt
+        
+        
         
 
---main ::  IO () 
---main  = do
---gen <- getStdGen
---let ideck = [0..51]
---let ideck = shuffleDeck gen ideck
---play ideck
+main ::  IO () 
+main  = do
+seed <- getStdGen
+let player = 0
+let dealer = 0
+let ideck = [0..51]
+let ideckS = shuffleDeck seed ideck
+--print ideckS
+playing ideckS player dealer
