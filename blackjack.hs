@@ -28,13 +28,22 @@ names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
         "J de copas", "J de ouros", "J de paus", "J de espadas",
         "Q de copas", "Q de ouros", "Q de paus", "Q de espadas",
         "K de copas", "K de ouros", "K de paus", "K de espadas"]
-        
 
-playing :: [Int] -> Int -> Int -> IO ()
+
+
+deal :: [Int] -> [Int] -> [Int]
+deal deck hand = do
+  let x = [head deck]
+  hand ++ x
+
+remove_h :: [Int] -> [Int]
+remove_h x = tail x
+
+playing :: [Int] -> [Int] -> [Int] -> IO ()
 playing ideck player dealer = do
-    if player > 21
+    if sum player > 21
     then print "Voce perdeu :("
-    else if dealer > 21
+    else if sum dealer > 21
     then print "Voce ganhou!!"
     else do
         --print ideck
@@ -53,14 +62,14 @@ playing ideck player dealer = do
         else do
             print "Opcao indisponivel"
             playing ideck player dealer
-        
--------------------------------------------------------------------------------        
 
-main :: IO () 
+-------------------------------------------------------------------------------
+
+main :: IO ()
 main = do
 seed <- getStdGen
-let player = 0
-let dealer = 0
+let player = []
+let dealer = []
 let ideck = [0..51]
 let ideckS = shuffleDeck seed ideck
 --print ideckS
