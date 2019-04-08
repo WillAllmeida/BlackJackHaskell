@@ -47,6 +47,27 @@ soma x
   where n = length $ find_aces x
         s = sum x
 
+dealer_time :: [Int] -> [Int] -> [Int] -> IO ()
+dealer_time ideck dealer player = do
+    let x = head ideck
+    let dealerf = deal (values !! x) dealer
+    let ideckf = remove_h ideck
+    print "O dealer tirou um(a):"
+    print (names !! x)
+    print "----------------------------------"
+    if soma dealerf > soma player && soma dealerf <= 21
+    then do
+        print "Voce perdeu :("
+        print "A carta escondida do dealer valia:"
+        let temp = dealer !! 1
+        print temp
+        --print dealerf
+    else if soma dealerf <= soma player && soma dealerf <=21
+    then dealer_time ideckf dealerf player
+    else do
+        print "Voce ganhou!!"
+        --print player
+        --print dealerf
 
 
 playing :: [Int] -> [Int] -> [Int] -> IO ()
@@ -54,13 +75,14 @@ playing ideck player dealer = do
     if soma player > 21
     then do
         print "Voce perdeu :("
-        print player
-        print dealer
-    else if soma dealer > 21 && soma player == 21
+        print "A carta escondida do dealer valia:"
+        let temp = dealer !! 1
+        print temp
+    else if soma dealer > 21 || soma player == 21
     then do
         print "Voce ganhou!!"
-        print player
-        print dealer
+        --print player
+        --print dealer
     else do
         print "----------------------------------"
         print "(1)Desce mais uma carta!--(2)Parar"
@@ -77,30 +99,18 @@ playing ideck player dealer = do
         else if opt == "2"
         then do
             if soma dealer < soma player
-            then do
-                let dealerf = deal (values !! x) dealer
-                print "O dealer tirou um(a):"
-                print (names !! x)
-                print "----------------------------------"
-                if soma dealerf > soma player && soma dealerf <= 21
-                then do
-                    print "Voce perdeu :("
-                    print player
-                    print dealerf
-                else do
-                    print "Voce ganhou!!"
-                    print player
-                    print dealerf
+            then dealer_time ideck dealer player
             else do
                 if soma dealer <= 21
                 then do
                     print "Voce perdeu :("
-                    print player
-                    print dealer
+                    print "A carta escondida do dealer valia:"
+                    let temp = dealer !! 1
+                    print temp
                 else do
                     print "Voce ganhou!!"
-                    print player
-                    print dealer
+--                    print player
+--                    print dealer
         else do
             print "Opcao indisponivel"
             playing ideck player dealer
