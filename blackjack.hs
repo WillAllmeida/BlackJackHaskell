@@ -37,14 +37,26 @@ deal value hand = do
 remove_h :: [Int] -> [Int]
 remove_h x = tail x
 
+find_aces :: [Int] -> [Int]
+find_aces x = filter(\x -> x == 11)x
+
+soma :: [Int] -> Int
+soma x
+  |s > 21 && n > 0 = s - (n*10)
+  |otherwise = s
+  where n = length $ find_aces x
+        s = sum x
+
+
+
 playing :: [Int] -> [Int] -> [Int] -> IO ()
 playing ideck player dealer = do
-    if sum player > 21 && sum dealer <=21
+    if soma player > 21
     then do
         print "Voce perdeu :("
         print player
         print dealer
-    else if sum dealer > 21 || sum player == 21
+    else if soma dealer > 21 && soma player == 21
     then do
         print "Voce ganhou!!"
         print player
@@ -64,13 +76,13 @@ playing ideck player dealer = do
             playing ideckf playerf dealer
         else if opt == "2"
         then do
-            if sum dealer < sum player
+            if soma dealer < soma player
             then do
                 let dealerf = deal (values !! x) dealer
                 print "O dealer tirou um(a):"
                 print (names !! x)
                 print "----------------------------------"
-                if sum dealerf > sum player || sum dealerf <= 21
+                if soma dealerf > soma player && soma dealerf <= 21
                 then do
                     print "Voce perdeu :("
                     print player
@@ -80,7 +92,7 @@ playing ideck player dealer = do
                     print player
                     print dealerf
             else do
-                if sum dealer <= 21
+                if soma dealer <= 21
                 then do
                     print "Voce perdeu :("
                     print player
@@ -95,7 +107,7 @@ playing ideck player dealer = do
 
 -------------------------------------------------------------------------------
 
-main :: IO () 
+main :: IO ()
 main = do
 seed <- getStdGen
 let ideck = [0..51]
