@@ -28,10 +28,9 @@ names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
         "J de copas", "J de ouros", "J de paus", "J de espadas",
         "Q de copas", "Q de ouros", "Q de paus", "Q de espadas",
         "K de copas", "K de ouros", "K de paus", "K de espadas"]
-player = []
-dealer = []
+        
 
-playing :: [Int] -> Int -> Int ->IO ()
+playing :: [Int] -> Int -> Int -> IO ()
 playing ideck player dealer = do
     if player > 21
     then print "Voce perdeu :("
@@ -39,16 +38,26 @@ playing ideck player dealer = do
     then print "Voce ganhou!!"
     else do
         --print ideck
-        print "-----------------------------"
-        print "(1)Desce uma carta!--(2)Parar"
+        print "----------------------------------"
+        print "(1)Desce mais uma carta!--(2)Parar"
         opt <- getLine
-        print opt
+        let x = head ideck
+        print x
+        if opt == "1"
+        then do
+            print opt
+            playing ideck player dealer
+        else if opt == "2"
+        then
+            print opt
+        else do
+            print "Opcao indisponivel"
+            playing ideck player dealer
         
-        
-        
+-------------------------------------------------------------------------------        
 
-main ::  IO () 
-main  = do
+main :: IO () 
+main = do
 seed <- getStdGen
 let player = 0
 let dealer = 0
