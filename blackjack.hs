@@ -29,11 +29,9 @@ names = ["As de copas", "As de ouros", "As de paus", "As de espadas",
         "Q de copas", "Q de ouros", "Q de paus", "Q de espadas",
         "K de copas", "K de ouros", "K de paus", "K de espadas"]
 
-
-
-deal :: [Int] -> [Int] -> [Int]
-deal deck hand = do
-  let x = [head deck]
+deal :: Int -> [Int] -> [Int]
+deal value hand = do
+  let x = [value]
   hand ++ x
 
 remove_h :: [Int] -> [Int]
@@ -41,36 +39,84 @@ remove_h x = tail x
 
 playing :: [Int] -> [Int] -> [Int] -> IO ()
 playing ideck player dealer = do
-    if sum player > 21
-    then print "Voce perdeu :("
-    else if sum dealer > 21
-    then print "Voce ganhou!!"
+    if sum player > 21 && sum dealer <=21
+    then do
+        print "Voce perdeu :("
+        print player
+        print dealer
+    else if sum dealer > 21 || sum player == 21
+    then do
+        print "Voce ganhou!!"
+        print player
+        print dealer
     else do
-        --print ideck
         print "----------------------------------"
         print "(1)Desce mais uma carta!--(2)Parar"
         opt <- getLine
         let x = head ideck
-        print x
+        --print x
         if opt == "1"
         then do
-            print opt
-            playing ideck player dealer
+            let playerf = deal (values !! x) player
+            let ideckf = remove_h ideck
+            print "Voce tirou um(a):"
+            print (names !! x)
+            playing ideckf playerf dealer
         else if opt == "2"
-        then
-            print opt
+        then do
+            if sum dealer < sum player
+            then do
+                let dealerf = deal (values !! x) dealer
+                print "O dealer tirou um(a):"
+                print (names !! x)
+                print "----------------------------------"
+                if sum dealerf > sum player || sum dealerf <= 21
+                then do
+                    print "Voce perdeu :("
+                    print player
+                    print dealerf
+                else do
+                    print "Voce ganhou!!"
+                    print player
+                    print dealerf
+            else do
+                if sum dealer <= 21
+                then do
+                    print "Voce perdeu :("
+                    print player
+                    print dealer
+                else do
+                    print "Voce ganhou!!"
+                    print player
+                    print dealer
         else do
             print "Opcao indisponivel"
             playing ideck player dealer
 
 -------------------------------------------------------------------------------
 
-main :: IO ()
+main :: IO () 
 main = do
 seed <- getStdGen
-let player = []
-let dealer = []
 let ideck = [0..51]
 let ideckS = shuffleDeck seed ideck
+let player = [values !! (ideckS !! 0),values !! (ideckS !! 2)]
+let dealer = [values !! (ideckS !! 1),values !! (ideckS !! 3)]
+print "----------------------------------"
+print "Bem vindo ao black jack"
+print "----------------------------------"
+print "Cartas iniciais do jogador:"
+let a = names !! (ideckS !! 0)
+let b = names !! (ideckS !! 2)
+let c = names !! (ideckS !! 1)
+print a
+print b
+print "Carta aberta inicial do dealer:"
+print c
+--print ideckS
+let ideck = tail ideckS
+let ideckS = tail ideck
+let ideck = tail ideckS
+let ideckS = tail ideck
 --print ideckS
 playing ideckS player dealer
