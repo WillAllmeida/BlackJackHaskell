@@ -62,12 +62,13 @@ dealer_time ideck dealer player = do
         let temp = dealer !! 1
         print temp
         --print dealerf
-    else if soma dealerf <= soma player && soma dealerf <=21
+    else if soma dealerf <= soma player && soma dealerf <21
     then dealer_time ideckf dealerf player
     else do
         print "Voce ganhou!!"
-        --print player
-        --print dealerf
+        print "A carta escondida do dealer valia:"
+        let temp = dealer !! 1
+        print temp
 
 
 playing :: [Int] -> [Int] -> [Int] -> IO ()
@@ -81,8 +82,9 @@ playing ideck player dealer = do
     else if soma dealer > 21 || soma player == 21
     then do
         print "Voce ganhou!!"
-        --print player
-        --print dealer
+        print "A carta escondida do dealer valia:"
+        let temp = dealer !! 1
+        print temp      
     else do
         print "----------------------------------"
         print "(1)Desce mais uma carta!--(2)Parar"
@@ -109,8 +111,9 @@ playing ideck player dealer = do
                     print temp
                 else do
                     print "Voce ganhou!!"
---                    print player
---                    print dealer
+                    print "A carta escondida do dealer valia:"
+                    let temp = dealer !! 1
+                    print temp
         else do
             print "Opcao indisponivel"
             playing ideck player dealer
@@ -119,26 +122,26 @@ playing ideck player dealer = do
 
 main :: IO ()
 main = do
-seed <- getStdGen
-let ideck = [0..51]
-let ideckS = shuffleDeck seed ideck
-let player = [values !! (ideckS !! 0),values !! (ideckS !! 2)]
-let dealer = [values !! (ideckS !! 1),values !! (ideckS !! 3)]
-print "----------------------------------"
-print "Bem vindo ao black jack"
-print "----------------------------------"
-print "Cartas iniciais do jogador:"
-let a = names !! (ideckS !! 0)
-let b = names !! (ideckS !! 2)
-let c = names !! (ideckS !! 1)
-print a
-print b
-print "Carta aberta inicial do dealer:"
-print c
---print ideckS
-let ideck = tail ideckS
-let ideckS = tail ideck
-let ideck = tail ideckS
-let ideckS = tail ideck
---print ideckS
-playing ideckS player dealer
+    seed <- getStdGen
+    let ideck = [0..51]
+    let ideckS = shuffleDeck seed ideck
+    let player = [values !! (ideckS !! 0),values !! (ideckS !! 2)]
+    let dealer = [values !! (ideckS !! 1),values !! (ideckS !! 3)]
+    print "----------------------------------"
+    print "Bem vindo ao black jack"
+    print "----------------------------------"
+    print "Cartas iniciais do jogador:"
+    let a = names !! (ideckS !! 0)
+    let b = names !! (ideckS !! 2)
+    let c = names !! (ideckS !! 1)
+    print a
+    print b
+    print "Carta aberta inicial do dealer:"
+    print c
+    --print ideckS
+    let ideck = tail ideckS
+    let ideckS = tail ideck
+    let ideck = tail ideckS
+    let ideckS = tail ideck
+    --print ideckS
+    playing ideckS player dealer
